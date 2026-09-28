@@ -131,3 +131,91 @@ CREATE TABLE raw_trecho (
     numero_diarias              VARCHAR(50),
     missao                      VARCHAR(20)
 );
+
+
+-- ---------------------------------------------------------------------------
+-- CAMADA SILVER: dados limpos e tipados (DECIMAL, DATE) com PK, FK e
+-- 2 constraints por tabela (8 no total), declaradas dentro do CREATE TABLE.
+--
+--   silver_viagem (mae, PK id_viagem)
+--       1:N -> silver_pagamento  (FK id_viagem)
+--       1:N -> silver_passagem   (FK id_viagem)
+--       1:N -> silver_trecho     (FK id_viagem)
+-- ---------------------------------------------------------------------------
+
+CREATE TABLE silver_viagem (
+    id_viagem                   VARCHAR(20)   NOT NULL,
+    num_proposta                VARCHAR(20),
+    situacao                    VARCHAR(50),
+    viagem_urgente              VARCHAR(5),
+    cod_orgao_superior          VARCHAR(20),
+    nome_orgao_superior         VARCHAR(255)  NOT NULL,        -- constraint 1
+    nome_viajante               VARCHAR(255),
+    cargo                       VARCHAR(255),
+    data_inicio                 DATE,
+    data_fim                    DATE,
+    destinos                    VARCHAR(4000),
+    motivo                      VARCHAR(4000),
+    valor_diarias               DECIMAL(10,2),
+    valor_passagens             DECIMAL(10,2),
+    valor_devolucao             DECIMAL(10,2),
+    valor_outros_gastos         DECIMAL(10,2),
+    valor_total                 DECIMAL(12,2),                 -- calculado
+    duracao_dias                INT,                           -- calculado
+    CONSTRAINT pk_viagem PRIMARY KEY (id_viagem),
+    CONSTRAINT ck_viagem_diarias CHECK (valor_diarias >= 0)    -- constraint 2
+);
+
+CREATE TABLE silver_pagamento (
+    id_pagamento                SERIAL,
+    id_viagem                   VARCHAR(20)   NOT NULL,
+    num_proposta                VARCHAR(20),
+    nome_orgao_pagador          VARCHAR(255),
+    nome_ug_pagadora            VARCHAR(255),
+    tipo_pagamento              VARCHAR(50)   NOT NULL,        -- constraint 2
+    valor                       DECIMAL(10,2),
+    CONSTRAINT pk_pagamento PRIMARY KEY (id_pagamento),
+    CONSTRAINT fk_pagamento_viagem FOREIGN KEY (id_viagem)
+        REFERENCES silver_viagem (id_viagem),
+    CONSTRAINT ck_pagamento_valor CHECK (valor >= 0)           -- constraint 1
+);
+
+CREATE TABLE silver_passagem (
+    id_passagem                 SERIAL,
+    id_viagem                   VARCHAR(20)   NOT NULL,
+    meio_transporte             VARCHAR(50),
+    pais_origem_ida             VARCHAR(60),
+    uf_origem_ida               VARCHAR(40),
+    cidade_origem_ida           VARCHAR(80),
+    pais_destino_ida            VARCHAR(60),
+    uf_destino_ida              VARCHAR(40),
+    cidade_destino_ida          VARCHAR(80),
+    valor_passagem              DECIMAL(10,2),
+    taxa_servico                DECIMAL(10,2),
+    data_emissao                DATE,
+    CONSTRAINT pk_passagem PRIMARY KEY (id_passagem),
+    CONSTRAINT fk_passagem_viagem FOREIGN KEY (id_viagem)
+        REFERENCES silver_viagem (id_viagem),
+    CONSTRAINT ck_passagem_valor CHECK (valor_passagem >= 0),  -- constraint 1
+    CONSTRAINT ck_passagem_taxa CHECK (taxa_servico >= 0)      -- constraint 2
+);
+
+CREATE TABLE silver_trecho (
+    id_trecho                   SERIAL,
+    id_viagem                   VARCHAR(20)   NOT NULL,
+    sequencia_trecho            INT,
+    origem_data                 DATE,
+    origem_uf                   VARCHAR(40),
+    origem_cidade               VARCHAR(80),
+    destino_data                DATE,
+    destino_uf                  VARCHAR(40),
+    destino_cidade              VARCHAR(80),
+    meio_transporte             VARCHAR(50),
+    numero_diarias              DECIMAL(10,2),
+    CONSTRAINT pk_trecho PRIMARY KEY (id_trecho),
+    CONSTRAINT fk_trecho_viagem FOREIGN KEY (id_viagem)
+        REFERENCES silver_viagem (id_viagem),
+    CONSTRAINT ck_trecho_diarias CHECK (numero_diarias >= 0),  -- constraint 1
+    CONSTRAINT uq_trecho_viagem_sequencia
+        UNIQUE (id_viagem, sequencia_trecho)                   -- constraint 2
+);
