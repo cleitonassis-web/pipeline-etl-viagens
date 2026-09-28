@@ -1,0 +1,22 @@
+# credenciais (nunca versionar)
+.env
+
+# dados brutos baixados (grandes e reproduziveis pelo 1_extrair.py)
+data/
+*.zip
+*.csv
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# sistema / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
