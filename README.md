@@ -97,8 +97,8 @@ desafio_transparencia/
 
 ```bash
 # 1. clonar e entrar na pasta
-git clone https://github.com/<seu-usuario>/<seu-repositorio>.git
-cd <seu-repositorio>
+git clone https://github.com/cleitonassis-web/pipeline-etl-viagens.git
+cd pipeline-etl-viagens
 
 # 2. (opcional) ambiente virtual
 python -m venv .venv
@@ -169,17 +169,17 @@ Ao final, o `2_transformar.py` imprime uma conferência automática:
 
 ## 📊 Perguntas de negócio e conclusões
 
-*Viagens realizadas, jan–jun/2025. Os valores são calculados pelo notebook, e a tabela "Resumo das respostas" no fim do `3_analise.ipynb` é a fonte oficial.*
+*338.476 viagens realizadas (99,0% das 341.860), jan–jun/2025. Todos os valores são calculados pelo `3_analise.ipynb`.*
 
 | Nº | Pergunta | Resposta |
 |---|---|---|
-| 1 | Os 5 órgãos com maior custo total | Justiça e Segurança Pública lidera (R$ 485,7 mi), seguido de Defesa, Educação, Meio Ambiente e Previdência Social |
-| 2 | Os 3 destinos com maior custo médio por viagem | "Brasília/DF, Brasília/DF" (R$ 27.401,80), Genebra (R$ 25.469,22) e Nova York (R$ 21.214,19) |
-| 3 | A viagem de maior duração e seu custo total | 384 dias (13/01/2025 a 31/01/2026), Previdência Social, custo registrado de R$ 0,00 |
-| 4 | Tipo de pagamento com maior valor médio | Diárias: R$ 2.078,79 por pagamento |
-| 5 | Meio de transporte mais usado nos trechos | Veículo Oficial: 385.734 trechos (51,0%) |
-| 6 | UF de destino que aparece em mais trechos | São Paulo: 81.727 trechos |
-| 7 | Órgão que mais pagou no total | Fundo Nacional de Segurança Pública: R$ 278,3 mi |
+| 1 | Os 5 órgãos com maior custo total | 1º Ministério da Justiça e Segurança Pública: R$ 485,7 mi (41,3% do total). Depois vêm Defesa, Educação, Meio Ambiente e Mudança do Clima, e Previdência Social. Juntos, os 5 somam R$ 839,6 mi (71,3% do custo de 35 órgãos) |
+| 2 | Os 3 destinos com maior custo médio por viagem | "Brasília/DF, Brasília/DF": R$ 27.401,80 (283 viagens) · Genebra/Suíça: R$ 25.469,22 (242) · Nova York/EUA: R$ 21.214,19 (149). O 1º custa 7,9x a média geral (R$ 3.478,42) |
+| 3 | A viagem de maior duração e seu custo total | Viagem 0000000000020699856 (Ministério da Previdência Social): 384 dias (13/01/2025 a 31/01/2026), com custo registrado de R$ 0,00 |
+| 4 | Tipo de pagamento com maior valor médio | Diárias: R$ 2.078,79 por pagamento (400.364 pagamentos), 1,1x o valor médio de Passagem (R$ 1.882,32) |
+| 5 | Meio de transporte mais usado nos trechos | Veículo Oficial: 385.734 trechos (51,0% de 755.885). O 2º é Aéreo (30,0%) |
+| 6 | UF de destino que aparece em mais trechos | São Paulo: 81.727 trechos (10,8%). SP, DF e MG concentram 27,8% dos trechos |
+| 7 | Órgão que mais pagou no total | Fundo Nacional de Segurança Pública: R$ 278,3 mi (23,6% do total pago, em 79.715 pagamentos) |
 
 ### Gráficos
 
@@ -192,18 +192,18 @@ Ao final, o `2_transformar.py` imprime uma conferência automática:
 
 ### Insights
 
-- **Concentração do gasto:** poucos órgãos superiores respondem pela maior parte do custo, com Justiça e Segurança Pública à frente.
+- **Concentração do gasto:** 5 de 35 órgãos respondem por 71,3% do custo, e só a Justiça e Segurança Pública responde por 41,3%.
 - **Quem gasta ≠ quem paga:** o órgão que mais gasta (P1) não é o que mais paga (P7). O desembolso sai de fundos e unidades pagadoras específicas, como o Fundo Nacional de Segurança Pública.
 - **Viagens internacionais** (Genebra, Nova York) estão entre os maiores custos médios, junto com deslocamentos múltiplos dentro de Brasília.
-- **Transporte terrestre domina:** mais da metade dos trechos é feita em veículo oficial.
+- **Transporte terrestre domina:** 51,0% dos trechos são feitos em veículo oficial, contra 30,0% em avião.
 - **Diárias** são o tipo de pagamento de maior valor médio.
 
 ### Qualidade dos dados (leitura crítica)
 
-- 18.545 viagens realizadas têm **custo R$ 0,00**, inclusive a mais longa. Isso indica gastos não registrados ou custeados por outra fonte.
-- 13.774 viagens **terminam depois de junho**, porque o arquivo traz as viagens *iniciadas* no semestre.
+- 18.545 viagens realizadas (5,5%) têm **custo R$ 0,00**, inclusive a mais longa. Isso indica gastos não registrados ou custeados por outra fonte.
+- 13.630 viagens realizadas **terminam depois de junho**, porque o arquivo traz as viagens *iniciadas* no semestre.
 - 3 viagens têm **custo negativo**: a devolução superou os gastos.
-- "Sigiloso" aparece entre os maiores pagadores, e "Inválido" aparece como meio de transporte. Esses registros limitam parte da análise.
+- 93.141 pagamentos vêm do órgão "Sigiloso", e 26.659 trechos têm meio de transporte "Inválido". Esses registros limitam parte da análise.
 
 ## 🚀 Melhorias futuras
 
@@ -216,4 +216,4 @@ Ao final, o `2_transformar.py` imprime uma conferência automática:
 
 ## 👤 Autor
 
-**<Seu nome>** · [LinkedIn](https://www.linkedin.com/in/<seu-perfil>) · [GitHub](https://github.com/<seu-usuario>)
+**Cleiton Luis Assis** · [GitHub](https://github.com/cleitonassis-web)
